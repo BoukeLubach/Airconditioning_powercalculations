@@ -7,6 +7,8 @@ import pandas as pd
 import numpy as np
 import webbrowser
 import plotly.graph_objs as go
+from datetime import date
+import colorscheme
 
 
 df = pd.read_csv('TSSlog2.csv', sep=';')
@@ -77,29 +79,105 @@ def display_output(rows):
     df3 = pd.DataFrame(data = ds)#, index=ds[:,0])
     df3.columns = ['Planned TSS', 'Actual TSS', 'Planned CTL', 'Actual CTL', 'Planned ATL', 'Actual ATL', 'Planned TSB', 'Actual TSB']
     df3.index = df2.index
-#    df3.to_csv('TSSlog3.csv', sep=';')
+    
+    today = pd.to_datetime(date.today())
+#    df3 = df3[df3.index<today]
+    df4 = df3[df3.index < today]
+    
 
     
+    [color1, color2, color3] = colorscheme.pickColorset(2)
+    if colorscheme==1:
+        color1 = 'rgba(0, 25, 150, {})'
+        color2 = 'rgba(228, 0, 124, {})'
+        color3 = 'rgba(205, 200, 30, {})'
+    
+    trace1=go.Scatter(
+            x=df3.index, 
+            y=round(df3['Planned CTL']),
+            name = df3.columns[1],
+                    
+            line= dict(
+                    width=4,
+                    color=color1.format('1'),
+                    dash = 'dot'
+                    )
+            )
     
     
-    trace1=go.Scatter(x=df3.index, y=round(df3['Planned CTL']))
-    trace2=go.Scatter(x=df3.index, y=round(df3['Actual CTL']))
-    trace3=go.Scatter(x=df3.index, y=round(df3['Planned ATL']))
-    trace4=go.Scatter(x=df3.index, y=round(df3['Actual ATL']))
+    trace2=go.Scatter(
+            x=df4.index, 
+            y=round(df4['Actual CTL']),
+            name = df4.columns[2],
+                        
+            fill='tozeroy',
+            fillcolor=color1.format('0.1'), 
+            line= dict(
+                    width=4,
+                    color=color1.format('1')
+                    )
+            )
+            
+    trace3=go.Scatter(
+            x=df3.index, 
+            y=round(df3['Planned ATL']),
+            name = df3.columns[3],
+            line= dict(
+                    width=4,
+                    color= color2.format('1'),
+                    dash = 'dot'
+                    )
+            )
+                
+      
+    trace4=go.Scatter(
+            x=df4.index, 
+            y=round(df4['Actual ATL']),
+            name = df4.columns[4],
+            fillcolor= color2.format('0.1'),
+            line= dict(
+                    width=4,
+                    color= color2.format('1')
+                    )
+            )
+                
+                
+    trace5=go.Scatter(
+            x=df3.index, 
+            y=round(df3['Planned TSB']),
+            name = df3.columns[5],
+            line= dict(
+                    width=4,
+                    color=color3.format('1'),
+                    dash = 'dot'
+                    )
+            )
+                
+    trace6=go.Scatter(
+            x=df4.index, 
+            y=round(df4['Actual TSB']),
+            name = df3.columns[6],
+            fill='tozeroy',
+            fillcolor=color3.format('0.1'), 
+            line= dict(
+                    width=4,
+                    color=color3.format('1')
+                    )
+            )
     
-    data = [trace1, trace2, trace3, trace4]
+    data = [trace1, trace2, trace3, trace4, trace5, trace6]
     layout = go.Layout(
-        title="My Dash Graph",
+        title="Performance balance",
         height=700,
         template = 'none')
     figure = go.Figure(data=data, layout=layout)
-    figure.update_layout(template='none')
-    
+    figure.update_layout(
+                template='none')
     
     return figure
 
 
 if __name__ == '__main__':
-    webbrowser.open('http://localhost:8050/')
+#    webbrowser.open('http://localhost:8050/')
     app.run_server(debug=False)
     
