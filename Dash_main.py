@@ -6,6 +6,7 @@ import dash_table
 import pandas as pd
 import numpy as np
 import webbrowser
+import plotly.graph_objs as go
 
 
 df = pd.read_csv('TSSlog2.csv', sep=';')
@@ -15,9 +16,9 @@ df = pd.read_csv('TSSlog2.csv', sep=';')
 app = dash.Dash(__name__)
 
 app.layout = html.Div([
-    html.Div(id='editing-prune-data-output'),
+    html.Div(dcc.Graph(id='CTL-ATL-TSB-graph')),
     dash_table.DataTable(
-        id='editing-prune-data',
+        id='TSS-table',
         columns=[{"name": i, "id": i} for i in df.columns],
         data=df.to_dict('records'),
 #        [
@@ -30,8 +31,8 @@ app.layout = html.Div([
 ])
 
 
-@app.callback(Output('editing-prune-data-output', 'children'),
-              [Input('editing-prune-data', 'data')])
+@app.callback(Output('CTL-ATL-TSB-graph', 'figure'),
+              [Input('TSS-table', 'data')])
 def display_output(rows):
 #    print(rows)
     df2 = pd.DataFrame(rows)
@@ -79,59 +80,24 @@ def display_output(rows):
 #    df3.to_csv('TSSlog3.csv', sep=';')
 
     
-    return html.Div([
-        dcc.Graph(
-            id='TSS-graph',
-            figure={
-                'data': [
-#                    {
-#                    'x': df3.index,
-#                    'y': df3['Planned TSS'],
-#                    'type': 'bar',
-#                    'name': 'Planned TSS'
-#                    },
-                    {
-                    'x': df3.index,
-                    'y': round(df3['Planned CTL'],1),
-                    'type': 'scatter',
-                    'name': 'Planned CTL',
-                    'linewidth': 20
-                    },
-                    {
-                    'x': df3.index,
-                    'y': round(df3['Actual CTL'],1),
-                    'type': 'scatter',
-                    'name': 'Actual CTL'
-                    },
-                    {
-                                             
-                    'x': df3.index,
-                    'y': df3['Planned ATL'],
-                    'type': 'scatter',
-                    'name': 'Planned ATL'
-                    },
-                                            {
-                    'x': df3.index,
-                    'y': df3['Actual ATL'],
-                    'type': 'scatter',
-                    'name': 'Actual ATL'
-                    },
-                                            {
-                    'x': df3.index,
-                    'y': df3['Planned TSB'],
-                    'type': 'scatter',
-                    'name': 'Planned TSB'
-                    },
-                    {
-                    'x': df3.index,
-                    'y': df3['Actual TSB'],
-                    'type': 'scatter',
-                    'name': 'Actual TSB'
-                    }],
-                        
-            }
-        )
-    ])
+    
+    
+    trace1=go.Scatter(x=df3.index, y=round(df3['Planned CTL']))
+    trace2=go.Scatter(x=df3.index, y=round(df3['Actual CTL']))
+    trace3=go.Scatter(x=df3.index, y=round(df3['Planned ATL']))
+    trace4=go.Scatter(x=df3.index, y=round(df3['Actual ATL']))
+    
+    data = [trace1, trace2, trace3, trace4]
+    layout = go.Layout(
+        title="My Dash Graph",
+        height=700,
+        template = 'none')
+    figure = go.Figure(data=data, layout=layout)
+    figure.update_layout(template='none')
+    
+    
+    return figure
+
 
 if __name__ == '__main__':
     webbrowser.open('http://localhost:8050/')
