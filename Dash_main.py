@@ -9,6 +9,9 @@ import webbrowser
 import plotly.graph_objs as go
 from datetime import date
 import colorscheme
+from flask import send_from_directory
+import os
+
 
 df = pd.read_csv('TSSlog2.csv', sep=';')
 
@@ -253,6 +256,8 @@ def display_TSS_week(rows):
     trace1=go.Bar(
             x=df2.index, 
             y=df2['Actual TSS'],
+            text=df2['Actual TSS'],
+            textposition='auto',
             name = df2.columns[1])
     
     data = [trace1]
@@ -268,6 +273,7 @@ def display_TSS_week(rows):
     
 #    print('callback used')
     return figure
+
 
 
 if __name__ == '__main__':
