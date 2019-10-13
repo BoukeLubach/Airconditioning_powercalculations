@@ -19,12 +19,19 @@ app.layout = html.Div([
                 
             html.Div([
                     html.H3('Column 1'),
-                    dcc.Graph(id='CTL-ATL-TSB-graph')
+                    dcc.Graph(id='CTL-ATL-TSB-graph',
+                    config={'displayModeBar': False}
+                    )
             ], style={'width': '49%', 'display': 'inline-block'}),
             
             html.Div([
                     html.H3('Column 2'),
-                    dcc.Graph(id='TSS-overview-graph')
+                    dcc.Graph(id='TSS-daily-graph',
+                    config={'displayModeBar': False}
+                    ),
+                    dcc.Graph(id='TSS-weekly-graph',
+                    config={'displayModeBar': False}
+                    )
             ],  style={'width': '49%', 'display': 'inline-block'})
         ], className="row"),
 
@@ -32,10 +39,16 @@ app.layout = html.Div([
             id='TSS-table',
             columns=[{"name": i, "id": i} for i in df.columns],
             data=df.to_dict('records'),
-            editable=True
+            editable=True,
+            fixed_rows={ 'headers': True, 'data': 0 },
+            style_cell = {'width':'150px'}
         ),
 
 ])
+
+
+
+
 
 
 @app.callback(Output('CTL-ATL-TSB-graph', 'figure'),
@@ -86,8 +99,8 @@ def display_output(rows):
     df3.index = df2.index
     
     today = pd.to_datetime(date.today())
-    df4 = df3[df3.index < today]
-        
+    df4 = df3[df3.index < today+pd.Timedelta(days=2)]
+    
     [color1, color2, color3] = colorscheme.pickColorset(3)
 
     trace1=go.Scatter(
@@ -166,7 +179,7 @@ def display_output(rows):
     data = [trace1, trace2, trace3, trace4, trace5, trace6]
     layout = go.Layout(
         title="Performance balance",
-        height=450
+        height=600
         )
     figure = go.Figure(data=data, layout=layout)
     figure.update_layout(                
@@ -179,41 +192,81 @@ def display_output(rows):
 
 
 
-
-
-
-
-
-@app.callback(Output('TSS-overview-graph', 'figure'),
+@app.callback(Output('TSS-daily-graph', 'figure'),
               [Input('TSS-table', 'data')])
 
 def display_TSS(rows):
-#    print(rows)
+
     df2 = pd.DataFrame(rows)
     df2 = df2.set_index(pd.to_datetime(df['Date'],dayfirst=True))
     df2 = df2.drop(columns=['Date'])
     
     df2 = df2[['Planned TSS', 'Actual TSS']].fillna(0)
+    
+    
+    
+#    df2.to_csv('TSSlog2.csv', sep=';')
     today = pd.to_datetime(date.today())
            
     [color1, color2, color3] = colorscheme.pickColorset(3)
 
     trace1=go.Bar(
             x=df2.index, 
-            y=round(df2['Actual TSS']),
+            y=df2['Actual TSS'],
             name = df2.columns[1]
             )
     
     data = [trace1]
     layout = go.Layout(
-        title="TSS",
-        height=450
+        title="TSS - day",
+        height=300
         )
     figure = go.Figure(data=data, layout=layout)
     figure.update_layout(
                 template='none')
     figure.update_xaxes(range=[today-pd.Timedelta(days=30), today+pd.Timedelta(days=10)])
     
+#    print('callback used')
+    return figure
+
+
+
+@app.callback(Output('TSS-weekly-graph', 'figure'),
+              [Input('TSS-table', 'data')])
+
+def display_TSS_week(rows):
+
+    df2 = pd.DataFrame(rows)
+    df2 = df2.set_index(pd.to_datetime(df['Date'],dayfirst=True))
+    df2 = df2.drop(columns=['Date'])
+    
+    df2 = df2[['Planned TSS', 'Actual TSS']].fillna(0)
+    
+    df2 = df2.resample('w').sum()
+    
+    
+#    df2.to_csv('TSSlog2.csv', sep=';')
+    today = pd.to_datetime(date.today())
+           
+    [color1, color2, color3] = colorscheme.pickColorset(3)
+
+    trace1=go.Bar(
+            x=df2.index, 
+            y=df2['Actual TSS'],
+            name = df2.columns[1])
+    
+    data = [trace1]
+    layout = go.Layout(
+        title="TSS - week",
+        height=300
+        )
+    figure = go.Figure(data=data, layout=layout)
+    figure.update_layout(
+                template='none',
+                bargap = 0.5)
+    figure.update_xaxes(range=[today-pd.Timedelta(days=30), today+pd.Timedelta(days=10)])
+    
+#    print('callback used')
     return figure
 
 
