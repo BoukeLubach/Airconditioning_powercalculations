@@ -9,8 +9,7 @@ import webbrowser
 import plotly.graph_objs as go
 from datetime import date
 import colorscheme
-from flask import send_from_directory
-import os
+
 
 
 df = pd.read_csv('TSSlog2.csv', sep=';')
@@ -19,33 +18,52 @@ app = dash.Dash(__name__)
 
 app.layout = html.Div([
         html.Div([
+                html.H2('Home'),
+                html.H2('TSS'),
+                html.H2('CTL/ATL/TSB'),
+                html.H2('Time in zone'),
                 
-            html.Div([
-                    html.H3('Column 1'),
-                    dcc.Graph(id='CTL-ATL-TSB-graph',
-                    config={'displayModeBar': False}
-                    )
-            ], style={'width': '49%', 'display': 'inline-block'}),
+        
             
+        ], style={  'width': '10%', 
+                    'display': 'inline-block', 
+                    'vertical-align': 'top',
+                    'height' : 700,
+                    'background-color' :'rgb(62, 193, 211)'}),
+                
+        html.Div([
+                        
             html.Div([
-                    html.H3('Column 2'),
-                    dcc.Graph(id='TSS-daily-graph',
-                    config={'displayModeBar': False}
-                    ),
-                    dcc.Graph(id='TSS-weekly-graph',
-                    config={'displayModeBar': False}
-                    )
-            ],  style={'width': '49%', 'display': 'inline-block'})
-        ], className="row"),
-
-        dash_table.DataTable(
-            id='TSS-table',
-            columns=[{"name": i, "id": i} for i in df.columns],
-            data=df.to_dict('records'),
-            editable=True,
-            fixed_rows={ 'headers': True, 'data': 0 },
-            style_cell = {'width':'150px'}
-        ),
+                    
+                html.Div([
+#                        html.H3('Performance balance'),
+                        dcc.Graph(id='CTL-ATL-TSB-graph',
+                        config={'displayModeBar': False}
+                        )
+                ], style={'width': '49%', 'display': 'inline-block'}),
+                
+                html.Div([
+#                        html.H3('TSS overview'),
+                        dcc.Graph(id='TSS-daily-graph',
+                        config={'displayModeBar': False}
+                        ),
+                        dcc.Graph(id='TSS-weekly-graph',
+                        config={'displayModeBar': False}
+                        )
+                ],  style={'width': '49%', 'display': 'inline-block'})
+            ], className="row"),
+    
+            html.Div([
+                dash_table.DataTable(
+                    id='TSS-table',
+                    columns=[{"name": i, "id": i} for i in df.columns],
+                    data=df.to_dict('records'),
+                    editable=True,
+                    fixed_rows={ 'headers': True, 'data': 0 },
+                    style_cell = {'width':'150px'}
+                )], style={'width': '30%', 'display': 'inline-block'}
+            )
+        ],  style={'width': '90%', 'display': 'inline-block'})
 
 ])
 
