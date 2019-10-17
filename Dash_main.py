@@ -8,7 +8,7 @@ import numpy as np
 import plotly.graph_objs as go
 from datetime import date
 import colorscheme
-import header
+import components
 
 
 df = pd.read_csv('TSSlog2.csv', sep=';')
@@ -23,30 +23,33 @@ app.layout = html.Div([
 ])
 
 home = html.Div([
-        header.get_menu(),
+        components.get_menu(),
         
         html.Div([
+                 
             html.Div([
-                html.H3('Insert header here'),
-            ], style = {'height':80,'background-color':'white'}),            
-            html.Div([
-                    
+                 
+                components.get_header(),   
                 html.Div([
 #                        html.H3('Performance balance'),
                         dcc.Graph(id='CTL-ATL-TSB-graph',
                         config={'displayModeBar': False}
                         )
-                ], style={'width': '40%', 'display': 'inline-block', 'padding': '3%'}),
+                ], style={'width': '44%', 'display': 'inline-block', 'padding': '3%'}),
                 
                 html.Div([
-#                        html.H3('TSS overview'),
-                        dcc.Graph(id='TSS-daily-graph',
-                        config={'displayModeBar': False}
-                        ),
-                        dcc.Graph(id='TSS-weekly-graph',
-                        config={'displayModeBar': False}
-                        )
-                ],  style={'width': '40%', 'display': 'inline-block', 'padding': '3%'})
+                        html.Div([
+                            dcc.Graph(id='TSS-daily-graph',
+                            config={'displayModeBar': False}
+                            )
+                        ], style={'padding-bottom':20}),
+                        html.Div([
+                            dcc.Graph(id='TSS-weekly-graph',
+                            config={'displayModeBar': False}
+                            )
+                        ], style={'padding-top':20})
+                            
+                ],  style={'width': '44%', 'display': 'inline-block', 'padding': '3%'})
             ], className="row"),
     
             html.Div([
@@ -59,13 +62,13 @@ home = html.Div([
                     style_cell = {'width':'150px'}
                 )], style={'width': '50%', 'display': 'inline-block', 'padding': '3%'}
             )
-        ],  style={'width': '85%', 'display': 'inline-block', 'background-color':'rgba(25,51,51,0.05)'}
+        ],  style={'width': '85%', 'display': 'inline-block', 'background-color':'rgba(25,51,51,0.05)', 'margin-left':'2%'}
         )
 
 ])
 
 TSS = html.Div([
-        header.get_menu(),
+        components.get_menu(),
         
         html.Div([
                  html.H2('Under construction'),
@@ -75,7 +78,7 @@ TSS = html.Div([
 
 
 timeInZone = html.Div([
-        header.get_menu(),
+        components.get_menu(),
         
         html.Div([
                  html.H2('Under construction'),
@@ -83,7 +86,7 @@ timeInZone = html.Div([
 ])
 
 noPage = html.Div([
-        header.get_menu(),
+        components.get_menu(),
         
         html.Div([
                  html.H2('Empty page'),
@@ -264,7 +267,7 @@ def display_TSS(rows):
     data = [trace1]
     layout = go.Layout(
         title="TSS - day",
-        height=300
+        height=280
         )
     figure = go.Figure(data=data, layout=layout)
     figure.update_layout(
@@ -304,7 +307,7 @@ def display_TSS_week(rows):
     data = [trace1]
     layout = go.Layout(
         title="TSS - week",
-        height=300
+        height=280
         )
     figure = go.Figure(data=data, layout=layout)
     figure.update_layout(

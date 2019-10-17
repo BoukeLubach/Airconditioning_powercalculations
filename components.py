@@ -9,6 +9,7 @@ def get_menu():
     menu = html.Div(
                 className="menu-bar",
                 children = [
+                        
                     dcc.Link('Home', href='/home', className="menu-link", 
                             style={
                                     'color':'white',
@@ -45,3 +46,17 @@ def get_menu():
     )
     
     return menu
+
+def get_header():
+    
+    header = html.Div(
+                className="header",
+                children= [
+                    html.H3('Log'),
+                ]
+                
+            )      
+                    
+
+    
+    return header
