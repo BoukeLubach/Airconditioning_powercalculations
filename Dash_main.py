@@ -68,7 +68,7 @@ home = html.Div([
                     },
                     style_cell = {
                         'width':'150px',
-                        'backgroundColor' : 'rgba(25,51,51,0.05)'
+#                        'backgroundColor' : 'rgba(25,51,51,0.05)'
                     },
                     style_data_conditional=[{
                         "if": {"row_index": df.index[pd.to_datetime(df.Date) == pd.to_datetime(date.today())].tolist()[0]},                  #returns list index for today
