@@ -35,32 +35,47 @@ home = html.Div([
                         dcc.Graph(id='CTL-ATL-TSB-graph',
                         config={'displayModeBar': False}
                         )
-                ], style={'width': '44%', 'display': 'inline-block', 'padding': '3%'}),
+                ], style={'width': '44%', 'display': 'inline-block', 'padding': '3%', 'padding-bottom' : '1%'}),
                 
                 html.Div([
                         html.Div([
                             dcc.Graph(id='TSS-daily-graph',
                             config={'displayModeBar': False}
                             )
-                        ], style={'padding-bottom':20}),
+                        ], style={'padding-bottom':10}),
                         html.Div([
                             dcc.Graph(id='TSS-weekly-graph',
                             config={'displayModeBar': False}
                             )
-                        ], style={'padding-top':20})
+                        ], style={'padding-top':10})
                             
-                ],  style={'width': '44%', 'display': 'inline-block', 'padding': '3%'})
+                ],  style={'width': '44%', 'display': 'inline-block', 'padding': '3%', 'padding-bottom' : '1%'})
             ], className="row"),
     
             html.Div([
                 dash_table.DataTable(
                     id='TSS-table',
-                    columns=[{"name": i, "id": i} for i in df.columns],
+                    columns=[{"name": i, "id": i, 'editable': (i == 'Actual TSS')} for i in df.columns],
                     data=df.to_dict('records'),
                     editable=True,
+                    style_table={
+                        'maxHeight': '300px'
+                    },
                     fixed_rows={ 'headers': True, 'data': 0 },
-                    style_cell = {'width':'150px'}
-                )], style={'width': '50%', 'display': 'inline-block', 'padding': '3%'}
+                    style_header={
+                        'backgroundColor': 'rgba(25, 51, 51, 1)',
+                        'color':'white'
+                    },
+                    style_cell = {
+                        'width':'150px',
+                        'backgroundColor' : 'rgba(25,51,51,0.05)'
+                    },
+                    style_data_conditional=[{
+                        "if": {"row_index": df.index[pd.to_datetime(df.Date) == pd.to_datetime(date.today())].tolist()[0]},                  #returns list index for today
+                        "backgroundColor": "#3D9970",
+                        'color': 'white'
+                        }]
+                )], style={'width': '94%', 'display': 'inline-block', 'padding': '3%', 'padding-top' : '1%'}
             )
         ],  style={'width': '85%', 'display': 'inline-block', 'background-color':'rgba(25,51,51,0.05)', 'margin-left':'2%'}
         )
@@ -100,14 +115,14 @@ noPage = html.Div([
               [Input('TSS-table', 'data')])
 def display_output(rows):
 #    print(rows)
-    df2 = pd.DataFrame(rows)
-    df2 = df2.set_index(pd.to_datetime(df['Date'],dayfirst=True))
-    df2 = df2.drop(columns=['Date'])
+    dff = pd.DataFrame(rows)
+    dff = dff.set_index(pd.to_datetime(df['Date'],dayfirst=True))
+    dff = dff.drop(columns=['Date'])
     
-    df2 = df2[['Planned TSS', 'Actual TSS']].fillna(0)
-    
-    df2.to_csv('TSSlog2.csv', sep=';')
-    
+    dff = dff[['Day', 'Planned TSS', 'Actual TSS']].fillna(0)
+
+    dff.to_csv('TSSlog2.csv', sep=';')
+    df2 = dff[['Planned TSS', 'Actual TSS']]
 
     CTLlookback = 42
     ATLlookback = 7
@@ -224,11 +239,19 @@ def display_output(rows):
     data = [trace1, trace2, trace3, trace4, trace5, trace6]
     layout = go.Layout(
         title="Performance balance",
-        height=600
+        height=450
         )
     figure = go.Figure(data=data, layout=layout)
     figure.update_layout(                
-            template='none')
+            template='none',
+            margin=go.layout.Margin(
+                l=50,
+                r=50,
+                b=50,
+                t=50,
+                pad=4
+            )
+        )
     figure.update_xaxes(range=[today-pd.Timedelta(days=30), today+pd.Timedelta(days=60)])
     
     
@@ -249,7 +272,8 @@ def display_TSS(rows):
     df2 = df2.set_index(pd.to_datetime(df['Date'],dayfirst=True))
     df2 = df2.drop(columns=['Date'])
     
-    df2 = df2[['Planned TSS', 'Actual TSS']].fillna(0)
+    df2 = df2[[
+            'Planned TSS', 'Actual TSS']].fillna(0)
     
     
     
@@ -267,11 +291,19 @@ def display_TSS(rows):
     data = [trace1]
     layout = go.Layout(
         title="TSS - day",
-        height=280
+        height=215
         )
     figure = go.Figure(data=data, layout=layout)
     figure.update_layout(
-                template='none')
+                template='none',
+                margin=go.layout.Margin(
+                    l=50,
+                    r=50,
+                    b=50,
+                    t=50,
+                    pad=4
+                )
+            )
     figure.update_xaxes(range=[today-pd.Timedelta(days=30), today+pd.Timedelta(days=10)])
     
 #    print('callback used')
@@ -307,12 +339,20 @@ def display_TSS_week(rows):
     data = [trace1]
     layout = go.Layout(
         title="TSS - week",
-        height=280
+        height=215
         )
     figure = go.Figure(data=data, layout=layout)
     figure.update_layout(
                 template='none',
-                bargap = 0.5)
+                bargap = 0.5,
+                margin=go.layout.Margin(
+                    l=50,
+                    r=50,
+                    b=50,
+                    t=50,
+                    pad=4
+                )
+            )
     figure.update_xaxes(range=[today-pd.Timedelta(days=30), today+pd.Timedelta(days=10)])
     
 #    print('callback used')
