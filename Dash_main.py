@@ -8,7 +8,7 @@ import numpy as np
 import plotly.graph_objs as go
 from datetime import date
 import colorscheme
-
+import header
 
 
 df = pd.read_csv('TSSlog2.csv', sep=';')
@@ -23,41 +23,12 @@ app.layout = html.Div([
 ])
 
 home = html.Div([
-        html.Div([
-                dcc.Link('Home', href='/home \n', className="tab first", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-                dcc.Link('TSS', href='/TSS \n', className="tab", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-                dcc.Link('Time in zone \n', href='/time-in-zone', className="tab", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-
-        ], style={  'width': '10%', 
-                    'display': 'inline-block', 
-                    'vertical-align': 'top',
-                    'height' : 1000,
-                    'background-color' :'rgb(62, 193, 211)'}
-        ),
+        header.get_menu(),
         
         html.Div([
-                        
+            html.Div([
+                html.H3('Insert header here'),
+            ], style = {'height':80,'background-color':'white'}),            
             html.Div([
                     
                 html.Div([
@@ -65,7 +36,7 @@ home = html.Div([
                         dcc.Graph(id='CTL-ATL-TSB-graph',
                         config={'displayModeBar': False}
                         )
-                ], style={'width': '49%', 'display': 'inline-block'}),
+                ], style={'width': '40%', 'display': 'inline-block', 'padding': '3%'}),
                 
                 html.Div([
 #                        html.H3('TSS overview'),
@@ -75,7 +46,7 @@ home = html.Div([
                         dcc.Graph(id='TSS-weekly-graph',
                         config={'displayModeBar': False}
                         )
-                ],  style={'width': '49%', 'display': 'inline-block'})
+                ],  style={'width': '40%', 'display': 'inline-block', 'padding': '3%'})
             ], className="row"),
     
             html.Div([
@@ -86,126 +57,37 @@ home = html.Div([
                     editable=True,
                     fixed_rows={ 'headers': True, 'data': 0 },
                     style_cell = {'width':'150px'}
-                )], style={'width': '50%', 'display': 'inline-block'}
+                )], style={'width': '50%', 'display': 'inline-block', 'padding': '3%'}
             )
-        ],  style={'width': '90%', 'display': 'inline-block'})
+        ],  style={'width': '85%', 'display': 'inline-block', 'background-color':'rgba(25,51,51,0.05)'}
+        )
 
 ])
 
 TSS = html.Div([
-       html.Div([
-                dcc.Link('Home', href='/home \n', className="tab first", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-                dcc.Link('TSS', href='/TSS \n', className="tab", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-                dcc.Link('Time in zone \n', href='/time-in-zone', className="tab", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-
-        ], style={  'width': '10%', 
-                    'display': 'inline-block', 
-                    'vertical-align': 'top',
-                    'height' : 1000,
-                    'background-color' :'rgb(62, 193, 211)'}
-        ),
+        header.get_menu(),
+        
         html.Div([
                  html.H2('Under construction'),
-        ],  style={'width': '90%', 'display': 'inline-block'})
+        ],  style={'width': '85%', 'display': 'inline-block'})
 ])
 
 
 
 timeInZone = html.Div([
-        html.Div([
-                dcc.Link('Home', href='/home \n', className="tab first", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-                dcc.Link('TSS', href='/TSS \n', className="tab", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-                dcc.Link('Time in zone \n', href='/time-in-zone', className="tab", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-
-        ], style={  'width': '10%', 
-                    'display': 'inline-block', 
-                    'vertical-align': 'top',
-                    'height' : 1000,
-                    'background-color' :'rgb(62, 193, 211)'}
-        ),
+        header.get_menu(),
+        
         html.Div([
                  html.H2('Under construction'),
-        ],  style={'width': '90%', 'display': 'inline-block'})
+        ],  style={'width': '85%', 'display': 'inline-block'})
 ])
 
 noPage = html.Div([
-        html.Div([
-                dcc.Link('Home', href='/home \n', className="tab first", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-                dcc.Link('TSS', href='/TSS \n', className="tab", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-                dcc.Link('Time in zone \n', href='/time-in-zone', className="tab", 
-                        style={
-                                'color':'white',
-                                'font-family': 'Open Sans',
-                                'text-decoration': 'none',
-                                'font-size':'32px'
-                        }
-                ),
-
-        ], style={  'width': '10%', 
-                    'display': 'inline-block', 
-                    'vertical-align': 'top',
-                    'height' : 1000,
-                    'background-color' :'rgb(62, 193, 211)'}
-        ),
+        header.get_menu(),
+        
         html.Div([
                  html.H2('Empty page'),
-        ],  style={'width': '90%', 'display': 'inline-block'})
+        ],  style={'width': '85%', 'display': 'inline-block'})
 ])
                 
 
@@ -404,7 +286,7 @@ def display_TSS_week(rows):
     
     df2 = df2[['Planned TSS', 'Actual TSS']].fillna(0)
     
-    df2 = df2.resample('w').sum()
+    df2 = df2.resample('W-SUN').sum()
     
     
 #    df2.to_csv('TSSlog2.csv', sep=';')
@@ -449,7 +331,7 @@ def display_page(pathname):
         return home
     elif pathname == '/TSS':
         return TSS
-    elif pathname == '/time-in-zoneance':
+    elif pathname == '/time-in-zone':
         return timeInZone
     else:
         return noPage
