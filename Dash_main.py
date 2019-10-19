@@ -22,91 +22,98 @@ app.layout = html.Div([
     html.Div(id='page-content')
 ])
 
-home = html.Div([
-        components.get_menu(),
-        
+home = html.Div(
         html.Div([
-                 
+            components.get_menu(),
             html.Div([
-                 
-                components.get_header(),   
                 html.Div([
-#                        html.H3('Performance balance'),
-                        dcc.Graph(id='CTL-ATL-TSB-graph',
-                        config={'displayModeBar': False}
-                        )
-                ], style={'width': '44%', 'display': 'inline-block', 'padding': '3%', 'padding-bottom' : '1%'}),
+                     
+                    components.get_header(),   
+                    html.Div([
+    #                        html.H3('Performance balance'),
+                            dcc.Graph(id='CTL-ATL-TSB-graph',
+                            config={'displayModeBar': False}
+                            )
+                    ], style={'width': '46%', 'display': 'inline-block', 'padding': '2%', 'padding-bottom' : '1%'}),
+                    
+                    html.Div([
+                            html.Div([
+                                dcc.Graph(id='TSS-daily-graph',
+                                config={'displayModeBar': False}
+                                )
+                            ], style={'padding-bottom':10}),
+                            html.Div([
+                                dcc.Graph(id='TSS-weekly-graph',
+                                config={'displayModeBar': False}
+                                )
+                            ], style={'padding-top':10})
+                                
+                    ],  style={'width': '46%', 'display': 'inline-block', 'padding': '2%', 'padding-bottom' : '1%'})
+                ], className="row"),
+        
+                html.Div([
+                    dash_table.DataTable(
+                        id='TSS-table',
+                        columns=[{"name": i, "id": i, 'editable': (i == 'Actual TSS')} for i in df.columns],
+                        data=df.to_dict('records'),
+                        editable=True,
+                        style_table={
+                            'maxHeight': '300px'
+                        },
+                        fixed_rows={ 'headers': True, 'data': 0 },
+                        style_header={
+                            'backgroundColor': 'rgba(25, 51, 51, 1)',
+                            'color':'white'
+                        },
+                        style_cell = {
+                            'width':'150px',
+                            'backgroundColor' : 'rgba(25,51,51,0.05)'
+                        },
+                        style_data_conditional=[{
+                            "if": {"row_index": df.index[pd.to_datetime(df.Date) == pd.to_datetime(date.today())].tolist()[0]},                  #returns list index for today
+                            "backgroundColor": 'rgba(95,205,0,0.6)',#"#3D9970",
+                            'color': 'black'
+                            }]
+                    )], style={'width': '96%', 'display': 'inline-block', 'padding': '2%', 'padding-top' : '1%'}
+                )
+            ], style={'width': '80%', 'display': 'inline-block', 'margin-left':'2%', }),
+        ],  style={'margin-top':'2%', 'margin-left':'2%'})
                 
-                html.Div([
-                        html.Div([
-                            dcc.Graph(id='TSS-daily-graph',
-                            config={'displayModeBar': False}
-                            )
-                        ], style={'padding-bottom':10}),
-                        html.Div([
-                            dcc.Graph(id='TSS-weekly-graph',
-                            config={'displayModeBar': False}
-                            )
-                        ], style={'padding-top':10})
-                            
-                ],  style={'width': '44%', 'display': 'inline-block', 'padding': '3%', 'padding-bottom' : '1%'})
-            ], className="row"),
+)
     
-            html.Div([
-                dash_table.DataTable(
-                    id='TSS-table',
-                    columns=[{"name": i, "id": i, 'editable': (i == 'Actual TSS')} for i in df.columns],
-                    data=df.to_dict('records'),
-                    editable=True,
-                    style_table={
-                        'maxHeight': '300px'
-                    },
-                    fixed_rows={ 'headers': True, 'data': 0 },
-                    style_header={
-                        'backgroundColor': 'rgba(25, 51, 51, 1)',
-                        'color':'white'
-                    },
-                    style_cell = {
-                        'width':'150px',
-#                        'backgroundColor' : 'rgba(25,51,51,0.05)'
-                    },
-                    style_data_conditional=[{
-                        "if": {"row_index": df.index[pd.to_datetime(df.Date) == pd.to_datetime(date.today())].tolist()[0]},                  #returns list index for today
-                        "backgroundColor": "#3D9970",
-                        'color': 'white'
-                        }]
-                )], style={'width': '94%', 'display': 'inline-block', 'padding': '3%', 'padding-top' : '1%'}
-            )
-        ],  style={'width': '85%', 'display': 'inline-block', 'background-color':'rgba(25,51,51,0.05)', 'margin-left':'2%'}
-        )
 
-])
 
 TSS = html.Div([
-        components.get_menu(),
-        
-        html.Div([
-                 html.H2('Under construction'),
-        ],  style={'width': '85%', 'display': 'inline-block'})
-])
+        html.Div(
+            components.get_menu(),
+            
+            html.Div([
+                     html.H2('Under construction'),
+            ],  style={'width': '85%', 'display': 'inline-block'})
+        )
+], style={'margin-top':'2%', 'margin-left':'2%'})
 
 
 
 timeInZone = html.Div([
-        components.get_menu(),
-        
-        html.Div([
-                 html.H2('Under construction'),
-        ],  style={'width': '85%', 'display': 'inline-block'})
-])
+        html.Div(
+            components.get_menu(),
+            
+            html.Div([
+                     html.H2('Under construction'),
+            ],  style={'width': '85%', 'display': 'inline-block'})
+        )
+], style={'margin-top':'2%', 'margin-left':'2%'})
 
 noPage = html.Div([
-        components.get_menu(),
-        
-        html.Div([
-                 html.H2('Empty page'),
-        ],  style={'width': '85%', 'display': 'inline-block'})
-])
+        html.Div(
+            components.get_menu(),
+            
+            html.Div([
+                     html.H2('Empty page'),
+            ],  style={'width': '85%', 'display': 'inline-block'})
+        )
+], style={'margin-top':'2%', 'margin-left':'2%'})
                 
 
         

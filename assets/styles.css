@@ -9,6 +9,19 @@ body{
     color:#222
 }
     
+.page {
+	  position: relative;
+	  width: 210mm;
+	  min-height: 300mm;
+	  padding: 0mm;
+	  margin: 10mm auto;
+	  /* border: 1px #D3D3D3 solid; */
+	  border-radius: 5px;
+	  background: white;
+	  /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
+ }    
+    
+    
 h1,h2,h3,h4,h5,h6{
     margin-top:0;
     margin-bottom:2rem;
@@ -83,6 +96,7 @@ h6{
     padding-left:1%;
     background:white;
     height:80px;
+
 
    
 
