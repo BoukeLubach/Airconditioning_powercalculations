@@ -1,5 +1,6 @@
-# TSSbalance
-CTL ATL and TSB sport performance balance dashboard made by using dash in python
+# weerdata_dashboard
+
+weergegevens van KNMI in python dashboard plot
 
 ![alt text](https://github.com/BoukeLubach/TSSbalance/blob/master/preview.png)
 
