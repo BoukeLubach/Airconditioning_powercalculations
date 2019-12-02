@@ -43,11 +43,11 @@ loc = [
         ]
 #
 ##
-#df = pd.read_csv('Weergegevens_1990_2018.csv', sep=';').fillna(0)
-#df = df.set_index(pd.to_datetime(df['Datetime'], dayfirst=True))
-#df['T'] = df['T']/10
-#df['TD'] = df['TD']/10
-#df['Mix ratio'] = calcMR(df['TD'])
+df = pd.read_csv('Weergegevens_1990_2018.csv', sep=';').fillna(0)
+df = df.set_index(pd.to_datetime(df['Datetime'], dayfirst=True))
+df['T'] = df['T']/10
+df['TD'] = df['TD']/10
+df['Mix ratio'] = calcMR(df['TD'])
 
 
 home_layout = html.Div(
@@ -460,6 +460,8 @@ def display_heatingresult(temperature, years, airflow):
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
     if pathname == '/home':
+        return home_layout
+    elif pathname == '/':
         return home_layout
     else:
         return '404'
